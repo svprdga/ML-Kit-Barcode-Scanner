@@ -3,45 +3,27 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:ml_kit_barcode_scanner/ml_kit_barcode_scanner.dart';
+import 'package:ml_kit_barcode_scanner_example/camera_view.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(App());
 }
 
-class MyApp extends StatefulWidget {
+class App extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _AppState createState() => _AppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+class _AppState extends State<App> {
+
+  late final Future<bool> _cameraPermissionFuture;
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-  }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await MlKitBarcodeScanner.platformVersion ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+    _cameraPermissionFuture = _requestCameraPermission();
   }
 
   @override
@@ -51,10 +33,43 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: FutureBuilder<bool>(
+          future: _cameraPermissionFuture,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.hasData && snapshot.data!) {
+              return _getScannerLayout();
+            } else if (snapshot.hasData) {
+              return _getNoPermissionsLayout();
+            } else {
+              return _getLoadingLayout();
+            }
+          },
         ),
       ),
     );
+  }
+
+  Future<bool> _requestCameraPermission() async {
+    final result = await Permission.camera.request();
+    return result.isGranted;
+  }
+
+  Widget _getLoadingLayout() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _getNoPermissionsLayout() {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(32.0),
+        child: Text('Camera permission denied.'),
+      ),
+    );
+  }
+
+  Widget _getScannerLayout() {
+    return CameraView();
   }
 }
