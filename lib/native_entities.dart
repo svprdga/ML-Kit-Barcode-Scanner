@@ -33,6 +33,15 @@ class BarcodeEntity {
   final String rawValue;
   final int valueType;
 
+  // Calendar
+  final String? calendarDescription;
+  final String? calendarEnd;
+  final String? calendarLocation;
+  final String? calendarOrganizer;
+  final String? calendarStart;
+  final String? calendarStatus;
+  final String? calendarSummary;
+
   // Location
   final double? locationLatitude;
   final double? locationLongitude;
@@ -40,6 +49,13 @@ class BarcodeEntity {
   BarcodeEntity(
       {required this.rawValue,
       required this.valueType,
+      this.calendarDescription,
+      this.calendarEnd,
+      this.calendarLocation,
+      this.calendarOrganizer,
+      this.calendarStart,
+      this.calendarStatus,
+      this.calendarSummary,
       this.locationLatitude,
       this.locationLongitude});
 
@@ -47,6 +63,15 @@ class BarcodeEntity {
     return BarcodeEntity(
         rawValue: json['rawValue'],
         valueType: json['valueType'],
+
+        // Calendar
+        calendarDescription: json['calendarDescription'],
+        calendarEnd: json['calendarEnd'],
+        calendarLocation: json['calendarLocation'],
+        calendarOrganizer: json['calendarOrganizer'],
+        calendarStart: json['calendarStart'],
+        calendarStatus: json['calendarStatus'],
+        calendarSummary: json['calendarSummary'],
 
         // Location
         locationLatitude: json['locationLatitude'],

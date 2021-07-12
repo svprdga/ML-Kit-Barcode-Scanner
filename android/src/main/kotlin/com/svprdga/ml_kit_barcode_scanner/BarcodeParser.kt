@@ -17,10 +17,10 @@ class BarcodeParser {
         when (barcode.valueType) {
             Barcode.TYPE_CALENDAR_EVENT -> {
                 map["calendarDescription"] = barcode.calendarEvent.description
-                map["calendarEnd"] = barcode.calendarEvent.end
+                map["calendarEnd"] = barcode.calendarEvent.end.rawValue
                 map["calendarLocation"] = barcode.calendarEvent.location
                 map["calendarOrganizer"] = barcode.calendarEvent.organizer
-                map["calendarStart"] = barcode.calendarEvent.start
+                map["calendarStart"] = barcode.calendarEvent.start.rawValue
                 map["calendarStatus"] = barcode.calendarEvent.status
                 map["calendarSummary"] = barcode.calendarEvent.summary
             }

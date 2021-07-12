@@ -21,6 +21,10 @@ class ResultScreen extends StatelessWidget {
         title = 'Location';
         body = _getLocationBody();
         break;
+      case BarcodeValueType.CALENDAR_EVENT:
+        title = 'Calendar event';
+        body = _getCalendarBody();
+        break;
       default:
         title = 'Unknown';
         body = _getUnknownBody();
@@ -40,6 +44,13 @@ class ResultScreen extends StatelessWidget {
 
   // *************************** PRIVATE METHODS *************************** //
 
+  String _getUnknownBody() {
+    return '''This code has an unknown format:
+    
+        - Raw value: ${barcode.rawValue}
+    ''';
+  }
+
   String _getLocationBody() {
     final barcodeLocation = barcode as BarcodeLocation;
 
@@ -50,10 +61,17 @@ class ResultScreen extends StatelessWidget {
     ''';
   }
 
-  String _getUnknownBody() {
-    return '''This code has an unknown format:
+  String _getCalendarBody() {
+    final barcodeCalendar = barcode as BarcodeCalendarEvent;
+
+    return '''This code contains a calendar event:
     
-        - Raw value: ${barcode.rawValue}
+        - Start: ${barcodeCalendar.start != null ? barcodeCalendar.start!.toIso8601String() : '-'}
+        - End: ${barcodeCalendar.end != null ? barcodeCalendar.end!.toIso8601String() : '-'}
+        - Location: ${barcodeCalendar.location}
+        - Summary: ${barcodeCalendar.summary}
+        - Status: ${barcodeCalendar.status}
+        - Organizer: ${barcodeCalendar.organizer} 
     ''';
   }
 }

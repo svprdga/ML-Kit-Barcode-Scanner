@@ -6,7 +6,7 @@ class LocationParser extends BaseParser {
   @override
   BarcodeLocation parse(BarcodeEntity entity) {
     return BarcodeLocation(
-        valueType: getValueType(entity.valueType),
+        valueType: BarcodeValueType.LOCATION,
         rawValue: entity.rawValue,
         latitude: entity.locationLatitude,
         longitude: entity.locationLongitude);

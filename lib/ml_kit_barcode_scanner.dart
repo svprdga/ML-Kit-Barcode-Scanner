@@ -12,12 +12,14 @@ part './models.dart';
 
 part './parser/location_parser.dart';
 
-class MlKitBarcodeScanner {
+part './parser/calendar_parser.dart';
 
+class MlKitBarcodeScanner {
   // ********************************* VARS ******************************** //
 
   final NativeWrapper _native = NativeWrapper();
   final locationParser = LocationParser();
+  final calendarParser = CalendarParser();
 
   //***************************** PUBLIC METHODS *************************** //
 
@@ -51,6 +53,7 @@ class MlKitBarcodeScanner {
             barcodes.add(locationParser.parse(entity));
             break;
           case TYPE_CALENDAR_EVENT:
+            barcodes.add(calendarParser.parse(entity));
             break;
           case TYPE_DRIVER_LICENSE:
             break;

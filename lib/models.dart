@@ -8,7 +8,7 @@ class InputImage {
   InputImage({required this.bytes, required this.size, required this.rotation});
 }
 
-enum BarcodeValueType { LOCATION, UNKNOWN }
+enum BarcodeValueType { CALENDAR_EVENT, LOCATION, UNKNOWN }
 
 abstract class Barcode {
   final BarcodeValueType valueType;
@@ -17,17 +17,19 @@ abstract class Barcode {
   Barcode({required this.valueType, required this.rawValue});
 }
 
-class BarcodeCalendar extends Barcode {
-  final DateTime? end;
+class BarcodeCalendarEvent extends Barcode {
   final DateTime? start;
+  final DateTime? end;
   final String? description;
   final String? location;
   final String? organizer;
   final String? status;
   final String? summary;
 
-  BarcodeCalendar(BarcodeValueType valueType, String rawValue,
-      {this.end,
+  BarcodeCalendarEvent(
+      {required BarcodeValueType valueType,
+      required String rawValue,
+      this.end,
       this.start,
       this.description,
       this.location,
