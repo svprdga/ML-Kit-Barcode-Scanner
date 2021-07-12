@@ -17,7 +17,11 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
 
+  // ********************************* VARS ******************************** //
+
   late final Future<bool> _cameraPermissionFuture;
+
+  // ****************************** LIFECYCLE ****************************** //
 
   @override
   void initState() {
@@ -48,6 +52,8 @@ class _AppState extends State<App> {
       ),
     );
   }
+
+  // *************************** PRIVATE METHODS *************************** //
 
   Future<bool> _requestCameraPermission() async {
     final result = await Permission.camera.request();

@@ -1,14 +1,19 @@
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
+import 'package:ml_kit_barcode_scanner/native_wrapper.dart';
 
 class MlKitBarcodeScanner {
-  static const MethodChannel _channel =
-      const MethodChannel('ml_kit_barcode_scanner');
 
-  static Future<String?> get platformVersion async {
-    final String? version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
+  // ********************************* VARS ******************************** //
+
+  final NativeWrapper _native = NativeWrapper();
+
+  //***************************** PUBLIC METHODS *************************** //
+
+  Future<void> scanBytes(Uint8List bytes) async {
+    await _native.scanBytes(bytes);
   }
 }
