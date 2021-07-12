@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ml_kit_barcode_scanner/ml_kit_barcode_scanner.dart';
+import 'package:ml_kit_barcode_scanner_example/result_screen.dart';
 import 'package:ml_kit_barcode_scanner_example/scanner_utils.dart';
 
 class CameraView extends StatefulWidget {
@@ -13,9 +14,7 @@ class CameraView extends StatefulWidget {
   _CameraViewState createState() => _CameraViewState();
 }
 
-class _CameraViewState extends State<CameraView>
-    with WidgetsBindingObserver {
-
+class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   // ********************************* VARS ******************************** //
 
   CameraController? _cameraController;
@@ -132,44 +131,29 @@ class _CameraViewState extends State<CameraView>
 
     try {
       final inputImage = _scannerUtils.createInputImage(camera, image);
-
-      _scanner.scanBytes(inputImage);
-
-      // final inputImage = _scannerUtils.createInputImage(camera, image);
-      // final List<Barcode> barcodes =
-      //     await _barcodeScanner!.processImage(inputImage);
-      //
-      // _processBarcodes(barcodes);
-      _isDetecting = false; // TODO remove
+      final list = await _scanner.scanBytes(inputImage);
+      _processBarcodes(list);
     } catch (e) {
       print('Error processing camera frame: $e');
       _isDetecting = false;
     }
   }
 
-  // _processBarcodes(List<Barcode> barcodes) async {
-  //   final barcode = await widget.mainBloc.processBarcodes(barcodes);
-  //
-  //   if (barcode != null) {
-  //     _stopCamera();
-  //
-  //     if (isMaterial(context)) {
-  //       await Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //               builder: (BuildContext context) =>
-  //                   CodeScreen(barcode: barcode)));
-  //     } else {
-  //       await Navigator.of(context, rootNavigator: true).push(
-  //           CupertinoPageRoute(
-  //               maintainState: false,
-  //               builder: (BuildContext context) =>
-  //                   CodeScreen(barcode: barcode)));
-  //     }
-  //
-  //     _startCamera();
-  //   } else {
-  //     _isDetecting = false;
-  //   }
-  // }
+  _processBarcodes(List<Barcode> barcodes) async {
+    final barcode = barcodes.isNotEmpty ? barcodes.first : null;
+
+    if (barcode != null) {
+      _stopCamera();
+
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  ResultScreen(barcode: barcode)));
+
+      _startCamera();
+    } else {
+      _isDetecting = false;
+    }
+  }
 }

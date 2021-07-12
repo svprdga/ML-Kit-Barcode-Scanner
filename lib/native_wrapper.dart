@@ -16,7 +16,7 @@ class NativeWrapper {
 
   //***************************** PUBLIC METHODS *************************** //
 
-  Future<List<Map<String, dynamic>>> scanBytes(InputImage inputImage) async {
+  Future<dynamic> scanBytes(InputImage inputImage) async {
     final result = await _platform.invokeMethod(_NATIVE_SCAN_BYTE_ARRAY, [
       inputImage.bytes,
       inputImage.size.width,
@@ -24,13 +24,6 @@ class NativeWrapper {
       inputImage.rotation
     ]);
 
-    final json = jsonDecode(result);
-
-    if ((result as String).length > 2) {
-      var a = 0;
-    }
-
-
-    return [];
+    return jsonDecode(result);
   }
 }

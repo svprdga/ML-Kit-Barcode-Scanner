@@ -64,8 +64,8 @@ class BarcodeParser {
 
             // Geo
             Barcode.TYPE_GEO -> {
-                map["geoPointLat"] = barcode.geoPoint.lat
-                map["geoPointLng"] = barcode.geoPoint.lng
+                map["locationLatitude"] = barcode.geoPoint.lat
+                map["locationLongitude"] = barcode.geoPoint.lng
             }
 
             // Phone
