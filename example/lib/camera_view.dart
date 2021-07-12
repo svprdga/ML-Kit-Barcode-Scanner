@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ml_kit_barcode_scanner/ml_kit_barcode_scanner.dart';
+import 'package:ml_kit_barcode_scanner_example/scanner_utils.dart';
 
 class CameraView extends StatefulWidget {
   CameraView({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class _CameraViewState extends State<CameraView>
   CameraController? _cameraController;
   bool _isDetecting = false;
   final MlKitBarcodeScanner _scanner = MlKitBarcodeScanner();
+  final ScannerUtils _scannerUtils = ScannerUtils();
 
   // ****************************** LIFECYCLE ****************************** //
 
@@ -129,13 +131,9 @@ class _CameraViewState extends State<CameraView>
     }
 
     try {
+      final inputImage = _scannerUtils.createInputImage(camera, image);
 
-        final WriteBuffer allBytes = WriteBuffer();
-        for (Plane plane in image.planes) {
-          allBytes.putUint8List(plane.bytes);
-        }
-        final bytes = allBytes.done().buffer.asUint8List();
-        _scanner.scanBytes(bytes);
+      _scanner.scanBytes(inputImage);
 
       // final inputImage = _scannerUtils.createInputImage(camera, image);
       // final List<Barcode> barcodes =

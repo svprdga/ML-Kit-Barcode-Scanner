@@ -1,6 +1,7 @@
-import 'dart:typed_data';
+import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:ml_kit_barcode_scanner/ml_kit_barcode_scanner.dart';
 
 class NativeWrapper {
   // ****************************** CONSTANTS ****************************** //
@@ -15,7 +16,21 @@ class NativeWrapper {
 
   //***************************** PUBLIC METHODS *************************** //
 
-  Future<void> scanBytes(Uint8List bytes) async {
-    await _platform.invokeMethod(_NATIVE_SCAN_BYTE_ARRAY, bytes);
+  Future<List<Map<String, dynamic>>> scanBytes(InputImage inputImage) async {
+    final result = await _platform.invokeMethod(_NATIVE_SCAN_BYTE_ARRAY, [
+      inputImage.bytes,
+      inputImage.size.width,
+      inputImage.size.height,
+      inputImage.rotation
+    ]);
+
+    final json = jsonDecode(result);
+
+    if ((result as String).length > 2) {
+      var a = 0;
+    }
+
+
+    return [];
   }
 }
