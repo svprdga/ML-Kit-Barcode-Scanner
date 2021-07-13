@@ -1,5 +1,8 @@
 import Flutter
-import UIKit
+//import MLImage
+//import MLKit
+import GoogleMLKit
+import MLKitBarcodeScanning
 
 public class SwiftMlKitBarcodeScannerPlugin: NSObject, FlutterPlugin {
     
@@ -67,9 +70,13 @@ public class SwiftMlKitBarcodeScannerPlugin: NSObject, FlutterPlugin {
         }
         
         // Prepare InputImage
-        /*let data = NSData(bytes: [UInt8], length: 2)
+        let data = NSData(bytes: bytes, length: bytes!.count)
+        let uiImage = UIImage(data: data as Data)
         
-        let image = VisionImage(buffer: sampleBuffer)
+        /*let image = VisionImage(image: uiImage)
+        visionImage.orientation = image.imageOrientation*/
+        
+        /*let image = VisionImage(buffer: sampleBuffer)
         image.orientation = imageOrientation(
             deviceOrientation: UIDevice.current.orientation,
             cameraPosition: cameraPosition)
