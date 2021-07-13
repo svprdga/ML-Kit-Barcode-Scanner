@@ -108,17 +108,17 @@ class BarcodeParser {
   }
 
   BarcodeEmail _parseEmail(BarcodeEntity entity) {
-    EmailType type = EmailType.UNKNOWN;
+    EmailType type = EmailType.unknown;
     if (entity.emailType != null) {
       switch (entity.emailType) {
         case EMAIL_TYPE_HOME:
-          type = EmailType.HOME;
+          type = EmailType.home;
           break;
         case EMAIL_TYPE_WORK:
-          type = EmailType.WORK;
+          type = EmailType.work;
           break;
         default:
-          type = EmailType.UNKNOWN;
+          type = EmailType.unknown;
       }
     }
 
@@ -131,23 +131,23 @@ class BarcodeParser {
   }
 
   BarcodePhone _parsePhone(BarcodeEntity entity) {
-    PhoneType type = PhoneType.UNKNOWN;
+    PhoneType type = PhoneType.unknown;
     if (entity.phoneType != null) {
       switch (entity.phoneType) {
         case PHONE_TYPE_FAX:
-          type = PhoneType.FAX;
+          type = PhoneType.fax;
           break;
         case PHONE_TYPE_HOME:
-          type = PhoneType.HOME;
+          type = PhoneType.home;
           break;
         case PHONE_TYPE_MOBILE:
-          type = PhoneType.MOBILE;
+          type = PhoneType.mobile;
           break;
         case PHONE_TYPE_WORK:
-          type = PhoneType.WORK;
+          type = PhoneType.work;
           break;
         default:
-          type = PhoneType.UNKNOWN;
+          type = PhoneType.unknown;
       }
     }
 
@@ -170,20 +170,20 @@ class BarcodeParser {
   }
 
   BarcodeWifi _parseWifi(BarcodeEntity entity) {
-    WifiEncryptionType type = WifiEncryptionType.UNKNOWN;
+    WifiEncryptionType type = WifiEncryptionType.unknown;
     if (entity.wifiEncryptionType != null) {
       switch (entity.wifiEncryptionType) {
         case WIFI_ENCRYPTION_TYPE_OPEN:
-          type = WifiEncryptionType.OPEN;
+          type = WifiEncryptionType.open;
           break;
         case WIFI_ENCRYPTION_TYPE_WPA:
-          type = WifiEncryptionType.WPA;
+          type = WifiEncryptionType.wpa;
           break;
         case WIFI_ENCRYPTION_TYPE_WEP:
-          type = WifiEncryptionType.WEP;
+          type = WifiEncryptionType.wep;
           break;
         default:
-          type = WifiEncryptionType.UNKNOWN;
+          type = WifiEncryptionType.unknown;
       }
     }
 

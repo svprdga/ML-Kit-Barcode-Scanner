@@ -9,19 +9,19 @@ class InputImage {
 }
 
 enum BarcodeValueType {
-  UNKNOWN,
-  CONTACT_INFO,
-  EMAIL,
-  ISBN,
-  PHONE,
-  PRODUCT,
-  SMS,
-  TEXT,
-  URL,
-  WIFI,
-  LOCATION,
-  CALENDAR_EVENT,
-  DRIVER_LICENSE
+  unknown,
+  contactInfo,
+  email,
+  isbn,
+  phone,
+  product,
+  sms,
+  text,
+  url,
+  wifi,
+  location,
+  calendarEvent,
+  driverLicense
 }
 
 abstract class Barcode {
@@ -49,7 +49,7 @@ class BarcodeCalendarEvent extends Barcode {
       this.organizer,
       this.status,
       this.summary})
-      : super(valueType: BarcodeValueType.CALENDAR_EVENT, rawValue: rawValue);
+      : super(valueType: BarcodeValueType.calendarEvent, rawValue: rawValue);
 }
 
 class BarcodeLocation extends Barcode {
@@ -57,7 +57,7 @@ class BarcodeLocation extends Barcode {
   final double? longitude;
 
   BarcodeLocation({required String rawValue, this.latitude, this.longitude})
-      : super(valueType: BarcodeValueType.LOCATION, rawValue: rawValue);
+      : super(valueType: BarcodeValueType.location, rawValue: rawValue);
 }
 
 class BarcodeContactInfo extends Barcode {
@@ -78,7 +78,7 @@ class BarcodeContactInfo extends Barcode {
       this.title,
       this.urls,
       this.organization})
-      : super(valueType: BarcodeValueType.CONTACT_INFO, rawValue: rawValue);
+      : super(valueType: BarcodeValueType.contactInfo, rawValue: rawValue);
 }
 
 class BarcodeDriverLicense extends Barcode {
@@ -113,10 +113,10 @@ class BarcodeDriverLicense extends Barcode {
       this.lastName,
       this.middleName,
       this.licenseNumber})
-      : super(valueType: BarcodeValueType.DRIVER_LICENSE, rawValue: rawValue);
+      : super(valueType: BarcodeValueType.driverLicense, rawValue: rawValue);
 }
 
-enum EmailType { UNKNOWN, WORK, HOME }
+enum EmailType { unknown, work, home }
 
 class BarcodeEmail extends Barcode {
   final String? address;
@@ -129,11 +129,11 @@ class BarcodeEmail extends Barcode {
       this.address,
       this.body,
       this.subject,
-      this.emailType = EmailType.UNKNOWN})
-      : super(valueType: BarcodeValueType.EMAIL, rawValue: rawValue);
+      this.emailType = EmailType.unknown})
+      : super(valueType: BarcodeValueType.email, rawValue: rawValue);
 }
 
-enum PhoneType { UNKNOWN, WORK, HOME, FAX, MOBILE }
+enum PhoneType { unknown, work, home, fax, mobile }
 
 class BarcodePhone extends Barcode {
   final String? number;
@@ -142,8 +142,8 @@ class BarcodePhone extends Barcode {
   BarcodePhone(
       {required String rawValue,
       this.number,
-      this.phoneType = PhoneType.UNKNOWN})
-      : super(valueType: BarcodeValueType.PHONE, rawValue: rawValue);
+      this.phoneType = PhoneType.unknown})
+      : super(valueType: BarcodeValueType.phone, rawValue: rawValue);
 }
 
 class BarcodeSms extends Barcode {
@@ -151,7 +151,7 @@ class BarcodeSms extends Barcode {
   final String? phoneNumber;
 
   BarcodeSms({required String rawValue, this.message, this.phoneNumber})
-      : super(valueType: BarcodeValueType.SMS, rawValue: rawValue);
+      : super(valueType: BarcodeValueType.sms, rawValue: rawValue);
 }
 
 class BarcodeUrl extends Barcode {
@@ -159,10 +159,10 @@ class BarcodeUrl extends Barcode {
   final String? url;
 
   BarcodeUrl({required String rawValue, this.title, this.url})
-      : super(valueType: BarcodeValueType.URL, rawValue: rawValue);
+      : super(valueType: BarcodeValueType.url, rawValue: rawValue);
 }
 
-enum WifiEncryptionType { UNKNOWN, OPEN, WPA, WEP }
+enum WifiEncryptionType { unknown, open, wpa, wep }
 
 class BarcodeWifi extends Barcode {
   final String? ssid;
@@ -173,23 +173,23 @@ class BarcodeWifi extends Barcode {
       {required String rawValue,
       this.ssid,
       this.password,
-      this.encryptionType = WifiEncryptionType.UNKNOWN})
-      : super(valueType: BarcodeValueType.WIFI, rawValue: rawValue);
+      this.encryptionType = WifiEncryptionType.unknown})
+      : super(valueType: BarcodeValueType.wifi, rawValue: rawValue);
 }
 
 class BarcodeIsbn extends Barcode {
   BarcodeIsbn({required String rawValue})
-      : super(valueType: BarcodeValueType.ISBN, rawValue: rawValue);
+      : super(valueType: BarcodeValueType.isbn, rawValue: rawValue);
 }
 
 class BarcodeProduct extends Barcode {
   BarcodeProduct({required String rawValue})
-      : super(valueType: BarcodeValueType.PRODUCT, rawValue: rawValue);
+      : super(valueType: BarcodeValueType.product, rawValue: rawValue);
 }
 
 class BarcodeText extends Barcode {
   BarcodeText({required String rawValue})
-      : super(valueType: BarcodeValueType.TEXT, rawValue: rawValue);
+      : super(valueType: BarcodeValueType.text, rawValue: rawValue);
 }
 
 

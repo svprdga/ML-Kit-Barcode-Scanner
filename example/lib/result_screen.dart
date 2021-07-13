@@ -17,51 +17,51 @@ class ResultScreen extends StatelessWidget {
     String title;
     String body;
     switch (barcode.valueType) {
-      case BarcodeValueType.CONTACT_INFO:
+      case BarcodeValueType.contactInfo:
         title = 'Contact data';
         body = _getContactInfoBody();
         break;
-      case BarcodeValueType.EMAIL:
+      case BarcodeValueType.email:
         title = 'Email';
         body = _getEmailBody();
         break;
-      case BarcodeValueType.ISBN:
+      case BarcodeValueType.isbn:
         title = 'ISBN code';
         body = _getIsbnBody();
         break;
-      case BarcodeValueType.PHONE:
+      case BarcodeValueType.phone:
         title = 'Phone';
         body = _getPhoneBody();
         break;
-      case BarcodeValueType.PRODUCT:
+      case BarcodeValueType.product:
         title = 'Product';
         body = _getProductBody();
         break;
-      case BarcodeValueType.SMS:
+      case BarcodeValueType.sms:
         title = 'SMS';
         body = _getSmsBody();
         break;
-      case BarcodeValueType.TEXT:
+      case BarcodeValueType.text:
         title = 'Plain text';
         body = _getTextBody();
         break;
-      case BarcodeValueType.URL:
+      case BarcodeValueType.url:
         title = 'Web address';
         body = _getUrlBody();
         break;
-      case BarcodeValueType.WIFI:
+      case BarcodeValueType.wifi:
         title = 'WiFi';
         body = _getWifiBody();
         break;
-      case BarcodeValueType.LOCATION:
+      case BarcodeValueType.location:
         title = 'Location';
         body = _getLocationBody();
         break;
-      case BarcodeValueType.CALENDAR_EVENT:
+      case BarcodeValueType.calendarEvent:
         title = 'Calendar event';
         body = _getCalendarBody();
         break;
-      case BarcodeValueType.DRIVER_LICENSE:
+      case BarcodeValueType.driverLicense:
         title = 'Driver license';
         body = _getDriverLicenseBody();
         break;
