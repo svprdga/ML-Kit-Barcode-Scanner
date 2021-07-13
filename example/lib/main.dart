@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ml_kit_barcode_scanner_example/file.dart';
-import 'package:ml_kit_barcode_scanner_example/scanner.dart';
+import 'package:ml_kit_barcode_scanner_example/camera_scanner.dart';
+import 'package:ml_kit_barcode_scanner_example/file_scanner.dart';
 
 void main() {
   runApp(App());
