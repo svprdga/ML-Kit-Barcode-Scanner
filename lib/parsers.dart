@@ -159,7 +159,7 @@ class BarcodeParser {
     return BarcodeSms(
         rawValue: entity.rawValue,
         message: entity.smsMessage,
-        phoneNumber: entity.phoneNumber);
+        phoneNumber: entity.smsPhoneNumber);
   }
 
   BarcodeUrl _parseUrl(BarcodeEntity entity) {

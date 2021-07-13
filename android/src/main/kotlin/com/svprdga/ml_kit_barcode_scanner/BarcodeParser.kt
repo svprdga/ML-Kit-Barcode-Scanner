@@ -1,5 +1,6 @@
 package com.svprdga.ml_kit_barcode_scanner
 
+import android.util.Log
 import com.google.mlkit.vision.barcode.Barcode
 import org.json.JSONObject
 
