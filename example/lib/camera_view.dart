@@ -116,7 +116,6 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
     }
     setState(() {});
 
-    // _barcodeScanner = GoogleMlKit.vision.barcodeScanner();
     _cameraController?.startImageStream((CameraImage image) {
       _processFrame(camera, image);
     });

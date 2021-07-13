@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
-import 'package:ml_kit_barcode_scanner/ml_kit_barcode_scanner.dart';
-import 'package:ml_kit_barcode_scanner_example/camera_view.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:ml_kit_barcode_scanner_example/file.dart';
+import 'package:ml_kit_barcode_scanner_example/scanner.dart';
 
 void main() {
   runApp(App());
@@ -16,66 +12,42 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-
   // ********************************* VARS ******************************** //
 
-  late final Future<bool> _cameraPermissionFuture;
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey();
+  int _selectedIndex = 0;
 
   // ****************************** LIFECYCLE ****************************** //
 
   @override
-  void initState() {
-    super.initState();
-
-    _cameraPermissionFuture = _requestCameraPermission();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: _scaffoldKey,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('ML Kit Barcode Scanner'),
         ),
-        body: FutureBuilder<bool>(
-          future: _cameraPermissionFuture,
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.hasData && snapshot.data!) {
-              return _getScannerLayout();
-            } else if (snapshot.hasData) {
-              return _getNoPermissionsLayout();
-            } else {
-              return _getLoadingLayout();
-            }
-          },
-        ),
+        body: _getCurrentItem(),
+        bottomNavigationBar: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.camera), label: 'From camera'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.upload_file), label: 'From file'),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: (int index) => setState(() => {_selectedIndex = index})),
       ),
     );
   }
 
   // *************************** PRIVATE METHODS *************************** //
 
-  Future<bool> _requestCameraPermission() async {
-    final result = await Permission.camera.request();
-    return result.isGranted;
-  }
-
-  Widget _getLoadingLayout() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
-  Widget _getNoPermissionsLayout() {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(32.0),
-        child: Text('Camera permission denied.'),
-      ),
-    );
-  }
-
-  Widget _getScannerLayout() {
-    return CameraView();
+  _getCurrentItem() {
+    if (_selectedIndex == 0) {
+      return CameraScanner();
+    } else {
+      return FileScanner(scaffoldKey: _scaffoldKey);
+    }
   }
 }

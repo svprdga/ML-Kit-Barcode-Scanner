@@ -13,11 +13,22 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import org.json.JSONArray
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 
 private const val TAG = "MlKitBarcodeScanner"
 
 private const val NATIVE_SCAN_INPUT_IMAGE = "scan_input_image"
-private const val ERROR_SCAN_INPUT_IMAGE = "error_$NATIVE_SCAN_INPUT_IMAGE"
+private const val ERROR_SCAN_INPUT_IMAGE_INVALID_ARGUMENTS =
+    "error_${NATIVE_SCAN_INPUT_IMAGE}_invalid_arguments"
+private const val ERROR_SCAN_INPUT_IMAGE_PARSE_URI = "error_${NATIVE_SCAN_INPUT_IMAGE}_parse_uri"
+private const val ERROR_SCAN_INPUT_IMAGE_FILE_NOT_FOUND =
+    "error_${NATIVE_SCAN_INPUT_IMAGE}_file_not_found"
+private const val ERROR_SCAN_INPUT_IMAGE_UNKNOWN_TYPE =
+    "error_${NATIVE_SCAN_INPUT_IMAGE}_unknown_type"
+private const val ERROR_SCAN_INPUT_IMAGE_PROCESS_FAILURE =
+    "error_${NATIVE_SCAN_INPUT_IMAGE}_process_failure"
 
 private const val INPUT_IMAGE_TYPE_BYTE_ARRAY = 0
 private const val INPUT_IMAGE_TYPE_URI = 1
@@ -53,6 +64,7 @@ class MlKitBarcodeScannerPlugin : FlutterPlugin, MethodCallHandler {
     // ************************************ PRIVATE METHODS ************************************ //
 
     private fun scanInputImage(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
+
         // Get arguments
         val args = call.arguments as ArrayList<Any>
         val type = args[0] as Int
@@ -60,32 +72,70 @@ class MlKitBarcodeScannerPlugin : FlutterPlugin, MethodCallHandler {
         val width = args[2] as Int?
         val height = args[3] as Int?
         val rotation = args[4] as Int?
-        val uri = args[5] as String?
+        val path = args[5] as String?
+
+        // Check arguments
+        val checkByteArray =
+            type == INPUT_IMAGE_TYPE_BYTE_ARRAY && (bytes == null || width == null || height == null || rotation == null)
+        val checkFilePath = type == INPUT_IMAGE_TYPE_URI && (path == null)
+        if (checkByteArray || checkFilePath) {
+            result.error(ERROR_SCAN_INPUT_IMAGE_INVALID_ARGUMENTS, "Invalid arguments", null)
+        }
 
         // Prepare InputImage
-        val image = when (type) {
+        val image: InputImage? = when (type) {
             INPUT_IMAGE_TYPE_BYTE_ARRAY -> {
                 InputImage.fromByteArray(
                     bytes, width!!, height!!, rotation!!, InputImage.IMAGE_FORMAT_NV21
                 )
             }
             INPUT_IMAGE_TYPE_URI -> {
-                InputImage.fromFilePath(context, Uri.parse(uri!!))
+                val uri = try {
+                    Uri.fromFile(File(path))
+                } catch (e: Exception) {
+                    result.error(ERROR_SCAN_INPUT_IMAGE_PARSE_URI, "Could not parse path: $e", null)
+                    null
+                }
+
+                if (uri != null) {
+                    try {
+                        InputImage.fromFilePath(context, uri)
+                    } catch (e: IOException) {
+                        result.error(
+                            ERROR_SCAN_INPUT_IMAGE_FILE_NOT_FOUND,
+                            "File not found: $e",
+                            null
+                        )
+                        null
+                    }
+                } else {
+                    null
+                }
             }
             else -> {
-                result.error(ERROR_SCAN_INPUT_IMAGE, "Unrecognized type of InputImage", null)
-                throw Exception()
+                result.error(
+                    ERROR_SCAN_INPUT_IMAGE_UNKNOWN_TYPE,
+                    "Unrecognized type of InputImage",
+                    null
+                )
+                null
             }
         }
 
         // Process image
-        scanner.process(image)
-            .addOnSuccessListener { barcodes ->
-                result.success(processBarcodes(barcodes).toString())
-            }
-            .addOnFailureListener {
-                result.error(ERROR_SCAN_INPUT_IMAGE, "Could not scan image", null)
-            }
+        image?.let {
+            scanner.process(it)
+                .addOnSuccessListener { barcodes ->
+                    result.success(processBarcodes(barcodes).toString())
+                }
+                .addOnFailureListener { error ->
+                    result.error(
+                        ERROR_SCAN_INPUT_IMAGE_PROCESS_FAILURE,
+                        "Could not scan image: $error",
+                        null
+                    )
+                }
+        }
     }
 
     private fun processBarcodes(barcodes: List<Barcode>): JSONArray {
@@ -95,7 +145,7 @@ class MlKitBarcodeScannerPlugin : FlutterPlugin, MethodCallHandler {
             try {
                 array.put(barcodeParser.parseBarcode(barcode))
             } catch (e: Exception) {
-               Log.e(TAG, "Could not parse one of the detected barcodes, cause: $e")
+                Log.e(TAG, "Could not parse one of the detected barcodes, cause: $e")
             }
         }
 
