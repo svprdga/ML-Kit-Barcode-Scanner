@@ -131,7 +131,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
 
     try {
       final inputImage = _scannerUtils.createInputImage(camera, image);
-      final list = await _scanner.scanBytes(inputImage);
+      final list = await _scanner.scan(inputImage);
       _processBarcodes(list);
     } catch (e) {
       print('Error processing camera frame: $e');

@@ -1,11 +1,45 @@
 part of ml_kit_barcode_scanner;
 
-class InputImage {
-  final Uint8List bytes;
-  final Size size;
-  final int rotation;
+enum InputImageType { byteArray, uri }
 
-  InputImage({required this.bytes, required this.size, required this.rotation});
+class InputImage {
+  final InputImageType imageType;
+  final Uint8List? bytes;
+  final int? imageWidth;
+  final int? imageHeight;
+  final int? rotation;
+  final String? uri;
+
+  InputImage(
+      {required this.imageType,
+      this.bytes,
+      this.imageWidth,
+      this.imageHeight,
+      this.rotation,
+      this.uri});
+
+  factory InputImage.fromByteArray(
+      {required Uint8List bytes,
+      required int width,
+      required int height,
+      required int rotation}) {
+    return InputImage(
+        imageType: InputImageType.byteArray,
+        bytes: bytes,
+        imageWidth: width,
+        imageHeight: height,
+        rotation: rotation);
+  }
+
+  factory InputImage.fromFilePath({required String filePath}) {
+    return InputImage(imageType: InputImageType.uri, uri: filePath);
+  }
+}
+
+class FileImage {
+  final File file;
+
+  FileImage({required this.file});
 }
 
 enum BarcodeValueType {
@@ -191,5 +225,3 @@ class BarcodeText extends Barcode {
   BarcodeText({required String rawValue})
       : super(valueType: BarcodeValueType.text, rawValue: rawValue);
 }
-
-

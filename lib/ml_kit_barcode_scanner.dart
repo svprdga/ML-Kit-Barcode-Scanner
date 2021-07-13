@@ -1,9 +1,11 @@
 library ml_kit_barcode_scanner;
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:ml_kit_barcode_scanner/native_entities.dart';
 import 'package:ml_kit_barcode_scanner/native_wrapper.dart';
 
@@ -19,8 +21,8 @@ class MlKitBarcodeScanner {
 
   //***************************** PUBLIC METHODS *************************** //
 
-  Future<List<Barcode>> scanBytes(InputImage inputImage) async {
-    final result = await _native.scanBytes(inputImage);
+  Future<List<Barcode>> scan(InputImage inputImage) async {
+    final result = await _native.scan(inputImage);
     final scanResult = ScanResult.fromJson(result);
 
     List<Barcode> barcodes = [];

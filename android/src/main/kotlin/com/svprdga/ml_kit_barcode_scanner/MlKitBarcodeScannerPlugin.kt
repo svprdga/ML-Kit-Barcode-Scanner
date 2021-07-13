@@ -1,9 +1,10 @@
 package com.svprdga.ml_kit_barcode_scanner
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.annotation.NonNull
 import com.google.mlkit.vision.barcode.Barcode
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 
@@ -11,19 +12,22 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONArray
 
 private const val TAG = "MlKitBarcodeScanner"
 
-private const val NATIVE_SCAN_BYTE_ARRAY = "scan_byte_array"
-private const val ERROR_SCAN_BYTE_ARRAY = "error_$NATIVE_SCAN_BYTE_ARRAY"
+private const val NATIVE_SCAN_INPUT_IMAGE = "scan_input_image"
+private const val ERROR_SCAN_INPUT_IMAGE = "error_$NATIVE_SCAN_INPUT_IMAGE"
+
+private const val INPUT_IMAGE_TYPE_BYTE_ARRAY = 0
+private const val INPUT_IMAGE_TYPE_URI = 1
 
 class MlKitBarcodeScannerPlugin : FlutterPlugin, MethodCallHandler {
 
     // ****************************************** VARS ***************************************** //
 
     private lateinit var channel: MethodChannel
+    private lateinit var context: Context
     private val scanner = BarcodeScanning.getClient()
     private val barcodeParser = BarcodeParser()
 
@@ -32,11 +36,12 @@ class MlKitBarcodeScannerPlugin : FlutterPlugin, MethodCallHandler {
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "ml_kit_barcode_scanner")
         channel.setMethodCallHandler(this)
+        context = flutterPluginBinding.applicationContext
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         when (call.method) {
-            NATIVE_SCAN_BYTE_ARRAY -> scanByteArray(call, result)
+            NATIVE_SCAN_INPUT_IMAGE -> scanInputImage(call, result)
             else -> result.notImplemented()
         }
     }
@@ -47,19 +52,31 @@ class MlKitBarcodeScannerPlugin : FlutterPlugin, MethodCallHandler {
 
     // ************************************ PRIVATE METHODS ************************************ //
 
-    private fun scanByteArray(@NonNull call: MethodCall, @NonNull result: Result) {
+    private fun scanInputImage(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         // Get arguments
         val args = call.arguments as ArrayList<Any>
-        val bytes = args[0] as ByteArray
-        val width = args[1] as Double
-        val height = args[2] as Double
-        val rotation = args[3] as Int
-
+        val type = args[0] as Int
+        val bytes = args[1] as ByteArray?
+        val width = args[2] as Int?
+        val height = args[3] as Int?
+        val rotation = args[4] as Int?
+        val uri = args[5] as String?
 
         // Prepare InputImage
-        val image = InputImage.fromByteArray(
-            bytes, width.toInt(), height.toInt(), rotation, InputImage.IMAGE_FORMAT_NV21
-        )
+        val image = when (type) {
+            INPUT_IMAGE_TYPE_BYTE_ARRAY -> {
+                InputImage.fromByteArray(
+                    bytes, width!!, height!!, rotation!!, InputImage.IMAGE_FORMAT_NV21
+                )
+            }
+            INPUT_IMAGE_TYPE_URI -> {
+                InputImage.fromFilePath(context, Uri.parse(uri!!))
+            }
+            else -> {
+                result.error(ERROR_SCAN_INPUT_IMAGE, "Unrecognized type of InputImage", null)
+                throw Exception()
+            }
+        }
 
         // Process image
         scanner.process(image)
@@ -67,7 +84,7 @@ class MlKitBarcodeScannerPlugin : FlutterPlugin, MethodCallHandler {
                 result.success(processBarcodes(barcodes).toString())
             }
             .addOnFailureListener {
-                result.error(ERROR_SCAN_BYTE_ARRAY, "Could not scan image", null)
+                result.error(ERROR_SCAN_INPUT_IMAGE, "Could not scan image", null)
             }
     }
 

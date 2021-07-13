@@ -15,8 +15,6 @@ class ScannerUtils {
     }
     final bytes = allBytes.done().buffer.asUint8List();
 
-    final Size imageSize =
-        Size(cameraImage.width.toDouble(), cameraImage.height.toDouble());
 
     // final InputImageRotation imageRotation =
     //     InputImageRotationMethods.fromRawValue(camera.sensorOrientation) ??
@@ -56,9 +54,10 @@ class ScannerUtils {
     //
     // return InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
 
-    return InputImage(
+    return InputImage.fromByteArray(
         bytes: bytes,
-        size: imageSize,
+        width: cameraImage.width,
+        height: cameraImage.height,
         rotation: rotation);
   }
 }
