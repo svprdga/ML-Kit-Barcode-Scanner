@@ -41,13 +41,18 @@ public class SwiftMlKitBarcodeScannerPlugin: NSObject, FlutterPlugin {
         let list = call.arguments as! [Any]
         let type = list[0] as! Int?
         
-        let bytes = list[1] as! FlutterStandardTypedData?
-              //let byte = [UInt8](uintInt8List.data)
+        let uintInt8List = list[1] as! FlutterStandardTypedData?
+        var bytes: [UInt8]? = nil
+        if (uintInt8List != nil && uintInt8List?.data != nil) {
+            bytes = [UInt8](uintInt8List!.data)
+        }
         
         let width = list[2] as! Int?
         let height = list[3] as! Int?
         let rotation = list[4] as! Int?
-        let path = list[5] as! String?
+        
+        // TODO
+        let path: String? = nil
         
         // Check arguments
         let checkByteArray = type == inputImageTypeByteArray && (
@@ -61,9 +66,34 @@ public class SwiftMlKitBarcodeScannerPlugin: NSObject, FlutterPlugin {
             result(FlutterError(code: self.errorScanInputImageInvalidArguments, message: "Invalid arguments", details: nil))
         }
         
-        print("EVERYTHING OK!!!")
+        // Prepare InputImage
+        /*let data = NSData(bytes: [UInt8], length: 2)
         
+        let image = VisionImage(buffer: sampleBuffer)
+        image.orientation = imageOrientation(
+            deviceOrientation: UIDevice.current.orientation,
+            cameraPosition: cameraPosition)
+        */
         // TODO
-        result([])
+        result(nil)
     }
+    
+    /*private func imageOrientation(
+        deviceOrientation: UIDeviceOrientation,
+        cameraPosition: AVCaptureDevice.Position
+    ) -> UIImage.Orientation {
+        switch deviceOrientation {
+        case .portrait:
+            return cameraPosition == .front ? .leftMirrored : .right
+        case .landscapeLeft:
+            return cameraPosition == .front ? .downMirrored : .up
+        case .portraitUpsideDown:
+            return cameraPosition == .front ? .rightMirrored : .left
+        case .landscapeRight:
+            return cameraPosition == .front ? .upMirrored : .down
+        case .faceDown, .faceUp, .unknown:
+            return .up
+        }
+    }*/
+    
 }
