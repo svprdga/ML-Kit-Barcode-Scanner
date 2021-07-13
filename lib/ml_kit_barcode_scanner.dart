@@ -25,7 +25,7 @@ class MlKitBarcodeScanner {
   Future<List<Barcode>> scan(InputImage inputImage) async {
     try {
       final result = await _native.scan(inputImage);
-      final scanResult = ScanResult.fromJson(result);
+      final scanResult = ScanResultEntity.fromJson(result);
 
       List<Barcode> barcodes = [];
       scanResult.barcodes.forEach((entity) {

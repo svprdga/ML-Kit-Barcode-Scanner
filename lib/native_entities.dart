@@ -1,9 +1,9 @@
-class ScanResult {
+class ScanResultEntity {
   final List<BarcodeEntity> barcodes;
 
-  ScanResult({required this.barcodes});
+  ScanResultEntity({required this.barcodes});
 
-  factory ScanResult.fromJson(dynamic json) {
+  factory ScanResultEntity.fromJson(dynamic json) {
     final barcodes = List<Map<String, dynamic>>.from(json);
 
     List<BarcodeEntity> entities = [];
@@ -11,7 +11,7 @@ class ScanResult {
       entities.add(BarcodeEntity.fromJson(entity));
     });
 
-    return ScanResult(barcodes: entities);
+    return ScanResultEntity(barcodes: entities);
   }
 }
 
@@ -46,15 +46,6 @@ const WIFI_ENCRYPTION_TYPE_WEP = 3;
 class BarcodeEntity {
   final String rawValue;
   final int valueType;
-
-  // Contact info
-  final String? contactInfoAddresses;
-  final String? contactInfoEmails;
-  final String? contactInfoName;
-  final String? contactInfoPhones;
-  final String? contactInfoTitle;
-  final String? contactInfoUrls;
-  final String? contactInfoOrganization;
 
   // Driver license
   final String? driverLicenseAddressCity;
@@ -111,13 +102,6 @@ class BarcodeEntity {
   BarcodeEntity(
       {required this.rawValue,
       required this.valueType,
-      this.contactInfoAddresses,
-      this.contactInfoEmails,
-      this.contactInfoName,
-      this.contactInfoOrganization,
-      this.contactInfoPhones,
-      this.contactInfoTitle,
-      this.contactInfoUrls,
       this.driverLicenseAddressCity,
       this.driverLicenseAddressState,
       this.driverLicenseAddressStreet,
@@ -159,15 +143,6 @@ class BarcodeEntity {
     return BarcodeEntity(
       rawValue: json['rawValue'],
       valueType: json['valueType'],
-
-      // Contact info
-      contactInfoAddresses: json['contactInfoAddresses'],
-      contactInfoEmails: json['contactInfoEmails'],
-      contactInfoName: json['contactInfoName'],
-      contactInfoPhones: json['contactInfoPhones'],
-      contactInfoTitle: json['contactInfoTitle'],
-      contactInfoUrls: json['contactInfoUrls'],
-      contactInfoOrganization: json['contactInfoOrganization'],
 
       // Driver license
       driverLicenseAddressCity: json['driverLicenseAddressCity'],

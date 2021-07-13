@@ -120,13 +120,7 @@ class ResultScreen extends StatelessWidget {
 
     return '''This code contains contact information:
     
-        - Addresses: ${barcodeContactInfo.addresses}
-        - Emails: ${barcodeContactInfo.emails}
-        - Name: ${barcodeContactInfo.emails}
-        - Phones: ${barcodeContactInfo.phones}
-        - Title: ${barcodeContactInfo.title}
-        - Urls: ${barcodeContactInfo.urls}
-        - Organization: ${barcodeContactInfo.organization}
+        - Raw value: ${barcodeContactInfo.rawValue}
     ''';
   }
 

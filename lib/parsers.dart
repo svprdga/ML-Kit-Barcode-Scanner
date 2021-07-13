@@ -40,8 +40,8 @@ class BarcodeParser {
         return _parseDriverLicense(entity);
       default:
         throw BarcodeParserException(
-            message: 'Unknown barcode entity provided with value type ${entity
-                .valueType}.');
+            message:
+                'Unknown barcode entity provided with value type ${entity.valueType}.');
     }
   }
 
@@ -71,15 +71,7 @@ class BarcodeParser {
   }
 
   BarcodeContactInfo _parseContactInfo(BarcodeEntity entity) {
-    return BarcodeContactInfo(
-        rawValue: entity.rawValue,
-        addresses: entity.contactInfoAddresses,
-        emails: entity.contactInfoEmails,
-        name: entity.contactInfoName,
-        phones: entity.contactInfoPhones,
-        title: entity.contactInfoTitle,
-        urls: entity.contactInfoUrls,
-        organization: entity.contactInfoOrganization);
+    return BarcodeContactInfo(rawValue: entity.rawValue);
   }
 
   BarcodeDriverLicense _parseDriverLicense(BarcodeEntity entity) {

@@ -95,23 +95,9 @@ class BarcodeLocation extends Barcode {
 }
 
 class BarcodeContactInfo extends Barcode {
-  final String? addresses;
-  final String? emails;
-  final String? name;
-  final String? phones;
-  final String? title;
-  final String? urls;
-  final String? organization;
-
-  BarcodeContactInfo(
-      {required String rawValue,
-      this.addresses,
-      this.emails,
-      this.name,
-      this.phones,
-      this.title,
-      this.urls,
-      this.organization})
+  BarcodeContactInfo({
+    required String rawValue,
+  })
       : super(valueType: BarcodeValueType.contactInfo, rawValue: rawValue);
 }
 

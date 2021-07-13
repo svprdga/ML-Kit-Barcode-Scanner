@@ -28,57 +28,7 @@ class BarcodeParser {
 
             // Contact
             Barcode.TYPE_CONTACT_INFO -> {
-
-                // Addresses
-                val addressesMap: MutableMap<String, Any> = mutableMapOf()
-                barcode.contactInfo.addresses.forEach { address ->
-                    addressesMap["type"] = address.type
-                    addressesMap["addressLine"] = address.addressLines
-                }
-                map["contactAddresses"] = addressesMap
-
-                // Emails
-                val emailsList = mutableListOf<Map<String, Any>>()
-                barcode.contactInfo.emails.forEach { email ->
-                    emailsList.add(
-                        mapOf(
-                            "type" to email.type,
-                            "subject" to email.subject,
-                            "body" to email.body,
-                            "address" to email.address
-                        )
-                    )
-                }
-                map["contactEmails"] = emailsList
-
-                // Name
-                val namesMap: MutableMap<String, Any> = mutableMapOf(
-                    "first" to barcode.contactInfo.name.first,
-                    "formattedName" to barcode.contactInfo.name.formattedName,
-                    "middle" to barcode.contactInfo.name.middle,
-                    "last" to barcode.contactInfo.name.last,
-                    "prefix" to barcode.contactInfo.name.prefix,
-                    "pronunciation" to barcode.contactInfo.name.pronunciation,
-                    "suffix" to barcode.contactInfo.name.suffix
-                )
-                map["contactName"] = namesMap
-
-                // Phones
-                val phonesList = mutableListOf<Map<String, Any>>()
-                barcode.contactInfo.phones.forEach { phone ->
-                    phonesList.add(
-                        mapOf(
-                            "type" to phone.type,
-                            "number" to phone.number
-                        )
-                    )
-                }
-                map["contactPhones"] = phonesList
-
-                // Other
-                map["contactUrls"] = barcode.contactInfo.urls
-                map["contactOrganization"] = barcode.contactInfo.organization.first()
-                map["contactTitle"] = barcode.contactInfo.title
+                // Not implemented.
             }
 
             // Driver license
