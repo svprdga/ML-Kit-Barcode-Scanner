@@ -51,6 +51,9 @@ public class SwiftMlKitBarcodeScannerPlugin: NSObject, FlutterPlugin {
         let width = list[2] as! Int?
         let height = list[3] as! Int?
         let rotation = list[4] as! Int?
+        let planes = list[5] as! Array<Dictionary<String, Any>>?
+        
+        print("planes: \(planes!.count)")
         
         // TODO
         let path: String? = nil
@@ -68,11 +71,11 @@ public class SwiftMlKitBarcodeScannerPlugin: NSObject, FlutterPlugin {
         }
         
         // Prepare InputImage
-        let data = Data(bytes!)
+        /*let data = Data(bytes!)
         let uiImage = UIImage(data: data)
         
         print("data is null: \(data == nil)")
-        print("uiImage is null: \(uiImage == nil)")
+        print("uiImage is null: \(uiImage == nil)")*/
         
         //let visionImage = VisionImage(image: uiImage)
         //visionImage.orientation = uiImage.imageOrientation
