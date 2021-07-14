@@ -18,9 +18,9 @@ class ScannerUtils {
     //         InputImageRotation.Rotation_0deg;
     final rotation = camera.sensorOrientation;
 
-    // final InputImageFormat inputImageFormat =
-    //     InputImageFormatMethods.fromRawValue(cameraImage.format.raw) ??
-    //         InputImageFormat.NV21;
+    final InputImageFormat imageFormat =
+        InputImageFormatExtension.getFromRawValue(cameraImage.format.raw) ??
+            InputImageFormat.NV21;
 
     switch (cameraImage.format.group) {
       case ImageFormatGroup.yuv420:
@@ -44,6 +44,7 @@ class ScannerUtils {
 
     return InputImage.fromByteArray(
         bytes: bytes,
+        imageFormat: imageFormat,
         width: cameraImage.width,
         height: cameraImage.height,
         planeMetadata: planeMetadata,

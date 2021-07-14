@@ -39,6 +39,7 @@ class NativeWrapper {
     final result = await _platform.invokeMethod(_NATIVE_SCAN_INPUT_IMAGE, [
       inputImage.imageType.index,
       inputImage.bytes,
+      inputImage.imageFormat?.value,
       inputImage.imageWidth,
       inputImage.imageHeight,
       inputImage.rotation,

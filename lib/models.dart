@@ -1,5 +1,47 @@
 part of ml_kit_barcode_scanner;
 
+enum InputImageFormat { NV21, YV12, YUV_420_888, YUV420, BGRA8888 }
+
+extension InputImageFormatExtension on InputImageFormat {
+  static const _NV21 = 17;
+  static const _YV12 = 842094169;
+  static const _YUV_420_888 = 35;
+  static const _YUV420 = 875704438;
+  static const _BGRA8888 = 1111970369;
+
+  static InputImageFormat? getFromRawValue(int value) {
+    switch (value) {
+      case _NV21:
+        return InputImageFormat.NV21;
+      case _YV12:
+        return InputImageFormat.YV12;
+      case _YUV_420_888:
+        return InputImageFormat.YUV_420_888;
+      case _YUV420:
+        return InputImageFormat.YUV420;
+      case _BGRA8888:
+        return InputImageFormat.BGRA8888;
+      default:
+        return null;
+    }
+  }
+
+  int get value {
+    switch (this) {
+      case InputImageFormat.NV21:
+        return _NV21;
+      case InputImageFormat.YV12:
+        return _YV12;
+      case InputImageFormat.YUV_420_888:
+        return _YUV_420_888;
+      case InputImageFormat.YUV420:
+        return _YUV420;
+      case InputImageFormat.BGRA8888:
+        return _BGRA8888;
+    }
+  }
+}
+
 class InputImagePlaneMetadata {
   final int bytes;
   final int? height;
@@ -13,6 +55,7 @@ enum InputImageType { byteArray, uri }
 class InputImage {
   final InputImageType imageType;
   final Uint8List? bytes;
+  final InputImageFormat? imageFormat;
   final int? imageWidth;
   final int? imageHeight;
   final int? rotation;
@@ -22,6 +65,7 @@ class InputImage {
   InputImage(
       {required this.imageType,
       this.bytes,
+      this.imageFormat,
       this.imageWidth,
       this.imageHeight,
       this.rotation,
@@ -30,6 +74,7 @@ class InputImage {
 
   factory InputImage.fromByteArray(
       {required Uint8List bytes,
+      required InputImageFormat imageFormat,
       required int width,
       required int height,
       required List<InputImagePlaneMetadata> planeMetadata,
@@ -37,6 +82,7 @@ class InputImage {
     return InputImage(
         imageType: InputImageType.byteArray,
         bytes: bytes,
+        imageFormat: imageFormat,
         imageWidth: width,
         imageHeight: height,
         planeMetadata: planeMetadata,

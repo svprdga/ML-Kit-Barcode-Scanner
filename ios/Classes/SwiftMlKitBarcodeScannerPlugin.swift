@@ -48,12 +48,11 @@ public class SwiftMlKitBarcodeScannerPlugin: NSObject, FlutterPlugin {
             bytes = [UInt8](uintInt8List!.data)
         }
         
-        let width = list[2] as! Int?
-        let height = list[3] as! Int?
-        let rotation = list[4] as! Int?
-        let planes = list[5] as! Array<Dictionary<String, Any>>?
-        
-        print("planes: \(planes!.count)")
+        let format = list[2] as! Int?
+        let width = list[3] as! Int?
+        let height = list[4] as! Int?
+        let rotation = list[5] as! Int?
+        let planes = list[6] as! Array<Dictionary<String, Any>>?
         
         // TODO
         let path: String? = nil
