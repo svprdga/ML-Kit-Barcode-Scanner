@@ -1,7 +1,7 @@
 import Flutter
 //import MLImage
 //import MLKit
-import GoogleMLKit
+import MLKitVision
 import MLKitBarcodeScanning
 
 public class SwiftMlKitBarcodeScannerPlugin: NSObject, FlutterPlugin {
