@@ -72,7 +72,7 @@ class MlKitBarcodeScannerPlugin : FlutterPlugin, MethodCallHandler {
         val width = args[2] as Int?
         val height = args[3] as Int?
         val rotation = args[4] as Int?
-        val path = args[5] as String?
+        val path = args[6] as String?
 
         // Check arguments
         val checkByteArray =

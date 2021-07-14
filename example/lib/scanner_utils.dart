@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ml_kit_barcode_scanner/ml_kit_barcode_scanner.dart';
@@ -15,7 +13,6 @@ class ScannerUtils {
     }
     final bytes = allBytes.done().buffer.asUint8List();
 
-
     // final InputImageRotation imageRotation =
     //     InputImageRotationMethods.fromRawValue(camera.sensorOrientation) ??
     //         InputImageRotation.Rotation_0deg;
@@ -25,7 +22,7 @@ class ScannerUtils {
     //     InputImageFormatMethods.fromRawValue(cameraImage.format.raw) ??
     //         InputImageFormat.NV21;
 
-    switch(cameraImage.format.group) {
+    switch (cameraImage.format.group) {
       case ImageFormatGroup.yuv420:
         break;
       case ImageFormatGroup.bgra8888:
@@ -35,29 +32,21 @@ class ScannerUtils {
       default:
     }
 
-    // final planeData = cameraImage.planes.map(
-    //   (Plane plane) {
-    //     return InputImagePlaneMetadata(
-    //       bytesPerRow: plane.bytesPerRow,
-    //       height: plane.height,
-    //       width: plane.width,
-    //     );
-    //   },
-    // ).toList();
-    //
-    // final inputImageData = InputImageData(
-    //   size: imageSize,
-    //   imageRotation: imageRotation,
-    //   inputImageFormat: inputImageFormat,
-    //   planeData: planeData,
-    // );
-    //
-    // return InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
+    final planeMetadata = cameraImage.planes.map(
+      (Plane plane) {
+        return InputImagePlaneMetadata(
+          bytes: plane.bytesPerRow,
+          height: plane.height,
+          width: plane.width,
+        );
+      },
+    ).toList();
 
     return InputImage.fromByteArray(
         bytes: bytes,
         width: cameraImage.width,
         height: cameraImage.height,
+        planeMetadata: planeMetadata,
         rotation: rotation);
   }
 }

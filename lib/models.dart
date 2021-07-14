@@ -1,5 +1,13 @@
 part of ml_kit_barcode_scanner;
 
+class InputImagePlaneMetadata {
+  final int bytes;
+  final int? height;
+  final int? width;
+
+  InputImagePlaneMetadata({required this.bytes, this.height, this.width});
+}
+
 enum InputImageType { byteArray, uri }
 
 class InputImage {
@@ -8,6 +16,7 @@ class InputImage {
   final int? imageWidth;
   final int? imageHeight;
   final int? rotation;
+  final List<InputImagePlaneMetadata>? planeMetadata;
   final String? uri;
 
   InputImage(
@@ -16,18 +25,21 @@ class InputImage {
       this.imageWidth,
       this.imageHeight,
       this.rotation,
+      this.planeMetadata,
       this.uri});
 
   factory InputImage.fromByteArray(
       {required Uint8List bytes,
       required int width,
       required int height,
+      required List<InputImagePlaneMetadata> planeMetadata,
       required int rotation}) {
     return InputImage(
         imageType: InputImageType.byteArray,
         bytes: bytes,
         imageWidth: width,
         imageHeight: height,
+        planeMetadata: planeMetadata,
         rotation: rotation);
   }
 
@@ -97,8 +109,7 @@ class BarcodeLocation extends Barcode {
 class BarcodeContactInfo extends Barcode {
   BarcodeContactInfo({
     required String rawValue,
-  })
-      : super(valueType: BarcodeValueType.contactInfo, rawValue: rawValue);
+  }) : super(valueType: BarcodeValueType.contactInfo, rawValue: rawValue);
 }
 
 class BarcodeDriverLicense extends Barcode {

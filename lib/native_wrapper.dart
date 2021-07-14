@@ -27,12 +27,22 @@ class NativeWrapper {
   //***************************** PUBLIC METHODS *************************** //
 
   Future<dynamic> scan(InputImage inputImage) async {
+    final List<Map<String, dynamic>> planes = [];
+    inputImage.planeMetadata?.forEach((metadata) {
+      planes.add({
+        'bytes': metadata.bytes,
+        'width': metadata.width,
+        'height': metadata.height
+      });
+    });
+
     final result = await _platform.invokeMethod(_NATIVE_SCAN_INPUT_IMAGE, [
       inputImage.imageType.index,
       inputImage.bytes,
       inputImage.imageWidth,
       inputImage.imageHeight,
       inputImage.rotation,
+      planes,
       inputImage.uri,
     ]);
 
