@@ -12,6 +12,7 @@ public class SwiftMlKitBarcodeScannerPlugin: NSObject, FlutterPlugin {
     private let errorScanInputImageFileNotFound = "error_scan_input_image_file_not_found"
     private let errorScanInputImageUnknownType = "error_scan_input_image_unknown_type"
     private let errorScanInputImageProcessFailure = "error_scan_input_image_process_failure"
+    private let errorScanInputImageInvalidMetadata = "error_scan_input_image_invalid_metadata"
     
     private let inputImageTypeByteArray = 0
     private let inputImageTypeUri = 1
@@ -59,7 +60,7 @@ public class SwiftMlKitBarcodeScannerPlugin: NSObject, FlutterPlugin {
         
         // Check arguments
         let checkByteArray = type == inputImageTypeByteArray && (
-            bytes == nil || width == nil || height == nil || rotation == nil
+            bytes == nil || width == nil || height == nil || rotation == nil || planes == nil
         )
         let checkFilePath = type == inputImageTypeUri && (
             path == nil
@@ -70,40 +71,39 @@ public class SwiftMlKitBarcodeScannerPlugin: NSObject, FlutterPlugin {
         }
         
         // Prepare InputImage
-        /*let data = Data(bytes!)
-        let uiImage = UIImage(data: data)
+        let data = Data(bytes!)
         
-        print("data is null: \(data == nil)")
-        print("uiImage is null: \(uiImage == nil)")*/
+        if (planes.count == 0) {
+            result(FlutterError(code: self.errorScanInputImageInvalidMetadata, message: "No planes were found, cannot scan.", details: nil))
+        } else if (planes.count == 1) {
+            let pixelBuffer = createPixelBufferFromBytes(width: width!, height:height!, data:  data.bytes, bytes: planes![0]["bytes"] as! Int)
+        }
         
-        //let visionImage = VisionImage(image: uiImage)
-        //visionImage.orientation = uiImage.imageOrientation
-        
-        /*let image = VisionImage(buffer: sampleBuffer)
-        image.orientation = imageOrientation(
-            deviceOrientation: UIDevice.current.orientation,
-            cameraPosition: cameraPosition)
-        */
         // TODO
         result(nil)
     }
     
-    /*private func imageOrientation(
-        deviceOrientation: UIDeviceOrientation,
-        cameraPosition: AVCaptureDevice.Position
-    ) -> UIImage.Orientation {
-        switch deviceOrientation {
-        case .portrait:
-            return cameraPosition == .front ? .leftMirrored : .right
-        case .landscapeLeft:
-            return cameraPosition == .front ? .downMirrored : .up
-        case .portraitUpsideDown:
-            return cameraPosition == .front ? .rightMirrored : .left
-        case .landscapeRight:
-            return cameraPosition == .front ? .upMirrored : .down
-        case .faceDown, .faceUp, .unknown:
-            return .up
-        }
-    }*/
-    
+    private func createPixelBufferFromBytes(
+        width: size_t,
+        height: size_t,
+        format: FourCharCode,
+        data: UnsafeMutableRawPointer,
+        bytes: Int
+    ) -> CVPixelBuffer? {
+        var pxBuffer: CVPixelBuffer? = nil
+        
+        CVPixelBufferCreateWithBytes(
+            kCFAllocatorDefault,
+            width,
+            height,
+            kCVPixelFormatType_32BGRA,
+            data,
+            bytes,
+            nil,
+            nil,
+            nil,
+            &pxBuffer)
+        
+        return pxBuffer
+    }
 }
